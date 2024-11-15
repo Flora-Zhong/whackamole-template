@@ -9,8 +9,9 @@ def main():
         mole_image = pygame.image.load("mole.png")
         screen = pygame.display.set_mode((640, 512))
         clock = pygame.time.Clock()
-        position = (640, 512)
+        mole_position = (0, 0)
         running = True
+        screen.blit(mole_image, mole_image.get_rect(topleft=(0, 0)))
         while running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -19,19 +20,20 @@ def main():
                     position = event.pos
                     x = position[0] // 32
                     y = position[1] // 32
-                    print(x)
+                    position = (x, y)
+                    if position == mole_position:
+                        x = random.randrange(0, 640)
+                        y = random.randrange(0, 512)
+                        row = x // 32
+                        col = y // 32
+                        mole_position = (row, col)
+                        pygame.display.flip()
             screen.fill("light green")
             for i in range(16):
                 pygame.draw.line(screen, "black", (0, i * 32), (640, i * 32))
             for j in range(20):
                 pygame.draw.line(screen, "black", (j * 32, 0), (j * 32, 512))
-            screen.blit(mole_image, mole_image.get_rect(topleft=(0, 0)))
-            x = 0
-            y = 0
-            if position == (x, y):
-                x = random.randrange(0, 640) // 32 * 32
-                y = random.randrange(0, 512) // 32 * 32
-                screen.blit(mole_image, mole_image.get_rect(topleft=(x, y)))
+            screen.blit(mole_image, mole_image.get_rect(topleft=(mole_position[0] * 32, mole_position[1] * 32)))
             pygame.display.flip()
             clock.tick(60)
 
